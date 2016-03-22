@@ -29,6 +29,13 @@ int main() {
 	return 0;
 }
 
+static int data_size(FILE * fp) {
+    int size;
+    fseek(fp, 0, SEEK_END);
+    size = ftell(fp);
+    return size;
+}
+
 /**
  *  accepts a file pointer, fast forwards file to data portion
  *  and returns the data in a buffer
@@ -47,7 +54,6 @@ static char * save_pcm_data(FILE * fp) {
 static void check_calloc(char * buf, FILE * fp) {
 	if (!buf) {
 		fclose(fp);
-		free(buf);
 		fputs("memory alloc failed", stderr);
 		exit(1);
 	}
@@ -65,6 +71,9 @@ static char * save_header(const char * filename) {
 	if( !fp ) perror(filename),exit(1);
 	fseek(fp , 0 , SEEK_SET); 				// go to beginning of file
 	buf = calloc(44, sizeof(char));				// allocate 44 bytes for header
+	if (!buf) {
+        goto on_error;
+	}
 	check_calloc(buf, fp);					// check for allocation success
 	
 	if(!fread((void *)buf, sizeof(char), 44 , fp)) {	// read first 44 bytes into buffer
@@ -74,8 +83,10 @@ static char * save_header(const char * filename) {
 		exit(1);
 	}
 	
-	//printf("buffer contents: \n%s", buf);
-
-    fclose(fp);
 	return buf;
+	
+	//printf("buffer contents: \n%s", buf);
+on_error:
+    fclose(fp);
+    return 0;
 }
