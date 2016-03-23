@@ -32,7 +32,6 @@ int main() {
     
 	//save header into buffer
 	header = save_header(fp);
-	//printf("buffer contents: \n%s", header);
 
 	//save pcm data after header
 	pcm_data = save_pcm_data(fp);
@@ -60,12 +59,9 @@ static int create_processed_wav(char * header, char * data) {
 	if(!buf) {
         return -1;
 	}
-	printf("header: \n%s\n\n", header);
-	printf("data: \n%s\n\n", data);
-	memcpy(buf, header, HEADER_SIZE);               // copy header
-	memcpy((&buf[HEADER_SIZE]), data, d_size);  // copy data
 	
-	printf("total buf: \n%s\n\n", buf);
+	memcpy(buf, header, HEADER_SIZE);               // copy header
+	memcpy((&buf[HEADER_SIZE]), data, d_size);      // copy data
 	
 	FILE * fp = fopen (processed_file, "wb");
 	fwrite(buf, sizeof(char), (HEADER_SIZE + d_size), fp);
