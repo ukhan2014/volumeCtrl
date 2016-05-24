@@ -1,5 +1,7 @@
 # volumeCtrl
 
+This is a simple tool to scale the amplitude of a wav file. It ends up making the sound louder or quieter.
+
 on linux compile with command:
 gcc -std=c99 ver2.c
 
